@@ -1,9 +1,18 @@
+import { getLoginInfo } from "@/api/auth";
 import { Button, Input } from "antd";
 import { useFormik } from "formik";
+import { useMutation } from "react-query";
 import * as Yup from "yup";
 
 export default function Login() {
   const emailRegEx = /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  const { mutate: mgetLoginInfo } = useMutation(getLoginInfo, {
+    onSuccess: (data) => {
+      console.log("purchase order data", data);
+    },
+    onError: (error) => {},
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -13,7 +22,12 @@ export default function Login() {
 
     onSubmit: function (values) {
       if (values) {
-      } else {
+        let payload = {};
+        payload = {
+          username: values.email,
+          password: values.password,
+        };
+        mgetLoginInfo(payload);
       }
     },
 
